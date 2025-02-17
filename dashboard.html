@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-auth-compat.js"></script>
+</head>
+<body class="flex flex-col items-center justify-center h-screen bg-gray-200">
+    <h1 class="text-3xl font-bold">🔥 Welcome to Dashboard</h1>
+    <p id="user-info" class="mt-4 text-lg"></p>
+    <button onclick="logout()" class="mt-6 bg-red-500 text-white px-6 py-2 rounded-md shadow-md hover:bg-red-600">
+        🚪 Logout
+    </button>
+
+    <script>
+        // ✅ โหลดข้อมูลจาก LocalStorage
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (user) {
+            document.getElementById("user-info").innerHTML = `👋 Hello, ${user.displayName} (${user.email})`;
+        } else {
+            window.location.href = "index.html"; // ถ้าไม่มีข้อมูล ให้กลับไปหน้า Login
+        }
+
+        // ✅ ฟังก์ชัน Logout
+        const logout = () => {
+            firebase.auth().signOut().then(() => {
+                localStorage.removeItem("user"); // ลบข้อมูลออก
+                window.location.href = "index.html"; // กลับไปหน้า Login
+            });
+        };
+    </script>
+</body>
+</html>

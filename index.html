@@ -4,22 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Classroom Management System</title>
-    <!-- Add Tailwind CSS CDN -->
+
+    <!-- ✅ Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Add React and ReactDOM -->
+
+    <!-- ✅ Firebase SDK (ใช้ -compat เพื่อให้รองรับ HTML) -->
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-auth-compat.js"></script>
+
+    <!-- ✅ React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <!-- Add Babel for JSX support -->
+
+    <!-- ✅ Babel for JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body>
     <div id="root"></div>
-    <!-- Load the component first -->
-    <script type="text/babel" src="./src/app/page.js"></script>
-    <!-- Then render it -->
+
+    <!-- ✅ React + Firebase -->
     <script type="text/babel">
+        // 🔥 ตั้งค่า Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCsrxmRBOgP40duJ-QfMIEzOVuqwPM5zpg",
+            authDomain: "web2567-version2.firebaseapp.com",
+            projectId: "web2567-version2",
+            storageBucket: "web2567-version2.firebasestorage.app",
+            messagingSenderId: "970566403217",
+            appId: "1:970566403217:web:64d727c0a5965bf3e66b30",
+            measurementId: "G-9T887SLZS3"
+        };
+
+        // ✅ Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // ✅ ฟังก์ชัน Login ด้วย Google + Redirect
+        const loginWithGoogle = async () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            try {
+                const result = await auth.signInWithPopup(provider);
+                console.log("✅ Logged in:", result.user);
+
+                // ✅ บันทึกข้อมูลผู้ใช้ลง LocalStorage
+                localStorage.setItem("user", JSON.stringify(result.user));
+
+                // ✅ Redirect ไปหน้า Dashboard
+                window.location.href = "dashboard.html"; 
+            } catch (error) {
+                console.error("❌ Login Error:", error.message);
+                alert("❌ Login Failed: " + error.message);
+            }
+        };
+
+        // ✅ React Component
+        function LoginPage() {
+            return (
+                <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+                    <h1 className="text-3xl font-bold mb-6">Classroom Management System</h1>
+                    <button 
+                        className="bg-blue-500 text-white px-6 py-2 rounded-md shadow-md hover:bg-blue-600"
+                        onClick={loginWithGoogle}
+                    >
+                        🔥 Login with Google
+                    </button>
+                </div>
+            );
+        }
+
+        // ✅ Render React Component
         const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(React.createElement(LoginPage));
+        root.render(<LoginPage />);
     </script>
 </body>
 </html>
